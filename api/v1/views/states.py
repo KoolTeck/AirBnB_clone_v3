@@ -28,20 +28,20 @@ def get_states(state_id=None):
                  strict_slashes=False)
 def delete_state(state_id=None):
     """ Function that delete a state by id """
-    del_state = storage.all("State").values()
-    obj = [obje.to_dict() for obje in del_state if obje.id == state_id]
+    states = storage.all("State").values()
+    obj = [obje.to_dict() for obje in states if obje.id == state_id]
     if obj == []:
         abort(404)
-    for obje in del_state:
-        if obje.id == state_id:
-            storage.delete(obje)
+    for state in states:
+        if state.id == state_id:
+            storage.delete(state)
             storage.save()
     return (jsonify({}), 200)
 
 
 @app_views.route('/states', methods=['POST'], strict_slashes=False)
 def post_states():
-    """ Function that create a states """
+    """ Function that create a state """
     post_data = request.get_json()
     if post_data is None:
         return jsonify({'error': 'Not a JSON'}), 400
@@ -55,7 +55,7 @@ def post_states():
 
 @app_views.route('/states/<state_id>', methods=['PUT'], strict_slashes=False)
 def put_state(state_id):
-    """ Fuction that update de states """
+    """ Function that updates a state data """
     set_state = storage.get(State, state_id)
     if set_state is None:
         abort(404)
